@@ -1,5 +1,8 @@
-# trigger kafka batch job from the kakfka topics.
+# trigger kafka Stream job.
+
 # Install this libraries in databricks.
+# confluent-kafka[avro,json,protobuf]>=1.4.2
+
 # run this code in databricks.
 
 from pyspark.sql.functions import *
