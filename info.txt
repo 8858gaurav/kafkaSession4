@@ -1,0 +1,19 @@
+Bootstrap servers : Say we have a 100 node kafka cluster, it is not
+possible to give the IP addresses of all these, rather we provide the IP
+address of a few servers. The client can connect to one of these servers
+and get to know all the metadata of the other brokers in the cluster.
+
+producer.produce(topic, key, value, callback) is an asynchronous
+method used to produce the data to a given topic.
+
+producer.poll() : the producer() method asynchronously sends the
+messages and doesn’t wait for the acknowledgement if the message
+was delivered. It will not execute the callback function. Therefore, the
+poll() method is used wherein the producer checks for any
+asynchronous events that need to be processed. Events include
+acknowledgement from brokers for messages sent / error. These
+messages are polled when the poll() method is executed.
+
+producer.flush() : This method is called prior to shutting down the
+producer to ensure all outstanding/ queued/ in-flight messages are
+delivered.
