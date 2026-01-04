@@ -41,24 +41,6 @@ show schemas;
 -- information_schema
 use schema default;
 
-## run this code for orders_input.json file. (has 2 rows)
-
-def acked(err, msg):
-    if err is not None:
-        print('faied to deliver msg: %s: %s' % (str(msg), str(msg)))
-    else:
-        print('msg produced: %s' % (str(msg)))
-        print(f'msg produced key in binary is: {msg.key()} & msg produced value in binary is {msg.value()}')
-        print(f'msg produced key in string is: {msg.key()} & msg produced value in binary is {msg.value()}')
-
-with open('/Volumes/misgaurav_databricks_ws_7405616800162977/default/misgaurav_v/retail_data/orders_data/orders_input.json', mode= 'r' ) as files:
-    for line in files:
-        order = json.loads(line)
-        customer_id = str(order['customer_id'])
-        producer.produce(topic = confluentTopicName, key = customer_id, value = line, callback = acked)
-        producer.poll(1)
-        producer.flush()
-
 #============================
 # Reading from a kakfka topic =
 #============================
@@ -146,6 +128,31 @@ flattened_orders \
 # Spark read stream jb keep runing, now placed the files.
 #========================================================
 
+spark.sql("select * from misgauravorderstablenew limit 5").show()
+# +--------+-----------+--------------+--------------+----+-----+-------+-------+----------+--------+-----+--------+
+# |order_id|customer_id|customer_fname|customer_lname|city|state|pincode|item_id|product_id|quantity|price|subtotal|
+# +--------+-----------+--------------+--------------+----+-----+-------+-------+----------+--------+-----+--------+
+# +--------+-----------+--------------+--------------+----+-----+-------+-------+----------+--------+-----+--------+
+
+
+## run this code for orders_input.json file. (has 2 rows)
+
+def acked(err, msg):
+    if err is not None:
+        print('faied to deliver msg: %s: %s' % (str(msg), str(msg)))
+    else:
+        print('msg produced: %s' % (str(msg)))
+        print(f'msg produced key in binary is: {msg.key()} & msg produced value in binary is {msg.value()}')
+        print(f'msg produced key in string is: {msg.key()} & msg produced value in binary is {msg.value()}')
+
+with open('/Volumes/misgaurav_databricks_ws_7405616800162977/default/misgaurav_v/retail_data/orders_data/orders_input.json', mode= 'r' ) as files:
+    for line in files:
+        order = json.loads(line)
+        customer_id = str(order['customer_id'])
+        producer.produce(topic = confluentTopicName, key = customer_id, value = line, callback = acked)
+        producer.poll(1)
+        producer.flush()
+
 
 spark.sql("select * from misgauravorderstablenew limit 5").show()
 # +--------+-----------+--------------+--------------+-------+-----+-------+-------+----------+--------+------+--------+
@@ -156,8 +163,6 @@ spark.sql("select * from misgauravorderstablenew limit 5").show()
 # |       2|        256|         David|     Rodriguez|Chicago|   IL|  60625|      4|       403|       1|129.99|  129.99|
 # |       1|      11599|          Mary|        Malone|Hickory|   NC|  28601|      1|       957|       1|299.98|  299.98|
 # +--------+-----------+--------------+--------------+-------+-----+-------+-------+----------+--------+------+--------+
-
-
 
 %sql
 describe detail misgauravorderstablenew; -- records -> 2 files.
