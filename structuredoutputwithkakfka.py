@@ -1,3 +1,10 @@
+###### Overview #######
+# 1. writing to a kafka topic first via batch job
+# 2. reading the live stram kafka files topic via sparkreadstream method
+# 3. writing the live stream data as a delta table for the analysis
+########################
+
+
 from pyspark.sql.functions import *
 from confluent_kafka import Producer
 import json
